@@ -5,7 +5,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import lombok.Data;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 @Entity
 @Data
@@ -21,15 +24,17 @@ public class Orders {
     private String address;
     private String payment;
     private String username;
-    private LocalDateTime orderTime;
+    
     private String status;
 
-    @PrePersist
-    public void onCreate() {
-        this.orderTime = LocalDateTime.now();
-        this.status = "Pending";
-    }
+   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+private ZonedDateTime orderTime;
 
+@PrePersist
+public void onCreate() {
+    this.orderTime = ZonedDateTime.now(ZoneId.of("Asia/Kolkata")); // ✅ FIXED
+    this.status = "Pending";
+}
 	public Long getId() {
 		return id;
 	}
@@ -86,13 +91,13 @@ public class Orders {
 		this.username = username;
 	}
 
-	public LocalDateTime getOrderTime() {
-		return orderTime;
-	}
+	public ZonedDateTime getOrderTime() {
+    return orderTime;
+}
 
-	public void setOrderTime(LocalDateTime orderTime) {
-		this.orderTime = orderTime;
-	}
+public void setOrderTime(ZonedDateTime orderTime) {
+    this.orderTime = orderTime;
+}
 
 	public String getStatus() {
 		return status;
